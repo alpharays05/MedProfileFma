@@ -11,6 +11,7 @@ import com.alpharays.mymedprofilefma.profilefma.profile.domain.usecase.ProfileSc
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.connectivity.ConnectivityObserver
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.MedicoUtils
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.UNEXPECTED_ERROR
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileScreenUseCase: ProfileScreenUseCase
 ) : ViewModel() {

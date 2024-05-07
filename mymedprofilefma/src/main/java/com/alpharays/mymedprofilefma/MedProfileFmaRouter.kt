@@ -3,7 +3,7 @@ package com.alpharays.mymedprofilefma
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import com.alpharays.mymedprofilefma.dummywork.DummyActivity
+import com.alpharays.mymedprofilefma.profilefma.profile.ProfileActivity
 
 @SuppressLint("StaticFieldLeak")
 object MedProfileFmaRouter {
@@ -13,7 +13,7 @@ object MedProfileFmaRouter {
 
     fun startDummyActivity(context: Context) {
         // Start the DummyActivity
-        val intent = Intent(context, DummyActivity::class.java)
+        val intent = Intent(context, ProfileActivity::class.java)
         context.startActivity(intent)
     }
 

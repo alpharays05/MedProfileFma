@@ -78,9 +78,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(
+    navController: NavController,
+    profileViewModel: ProfileViewModel = hiltViewModel()
+) {
 
-    val profileViewModel: ProfileViewModel = hiltViewModel()
 
     val context = LocalContext.current
     val connectivityStatus = MedicoUtils.isInternetAvailable(context)
@@ -113,7 +115,7 @@ fun ProfileScreen(navController: NavController) {
                 Modifier,
                 innerPadding,
                 profileViewModel
-            ){ profileInfo ->
+            ) { profileInfo ->
                 profileInfoResponse = profileInfo
             }
         }
@@ -134,8 +136,9 @@ fun ComposableProfileScreen(
         modifier
             .padding(paddingValues)
             .fillMaxSize()
-            .padding(12.dp)) {
-        ComposableProfileAbout(context, profileViewModel){ profileInfoResponse ->
+            .padding(12.dp)
+    ) {
+        ComposableProfileAbout(context, profileViewModel) { profileInfoResponse ->
             profileInfo(profileInfoResponse)
         }
         ComposableProfilePosts(context, profileViewModel)
@@ -151,7 +154,7 @@ fun ComposableProfileTopBar(
     topBarModifier: Modifier,
     dropdownMenuModifier: Modifier,
     navController: NavController,
-    profileInfoResponse : Profile
+    profileInfoResponse: Profile
 ) {
     var isMoreOptionsClicked by remember { mutableStateOf(false) }
 
@@ -180,7 +183,7 @@ fun ComposableProfileTopBar(
                 )
             }
 
-            if(isMoreOptionsClicked){
+            if (isMoreOptionsClicked) {
                 ComposableProfileMoreOptions(
                     onDismiss = {
                         isMoreOptionsClicked = false
@@ -191,8 +194,7 @@ fun ComposableProfileTopBar(
                 )
             }
         }
-    }
-    else {
+    } else {
         val painter = rememberVectorPainter(image = Icons.Default.KeyboardArrowLeft)
         var profileNameText by remember {
             mutableStateOf("")
@@ -249,8 +251,8 @@ fun ComposableProfileTopBar(
                     )
                 }
             ) {
-                LazyColumn{
-                    items(historyItems){
+                LazyColumn {
+                    items(historyItems) {
                         Row(
                             modifier = topBarModifier.padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically,
@@ -279,14 +281,15 @@ fun ComposableProfileMoreOptions(
 ) {
     var profileData by remember { mutableStateOf(Profile()) }
 
-    LaunchedEffect(profileInfoResponse){
+    LaunchedEffect(profileInfoResponse) {
         profileData = profileInfoResponse
     }
 
-    val dropDownItems = listOf("Update profile", "Share profile via message", "Share profile", "Sign Out")
+    val dropDownItems =
+        listOf("Update profile", "Share profile via message", "Share profile", "Sign Out")
     var pressOffset by remember { mutableStateOf(DpOffset(0.dp, 0.dp)) }
     var itemClicked by remember { mutableStateOf("") }
-    val interactionSource = remember{ MutableInteractionSource() }
+    val interactionSource = remember { MutableInteractionSource() }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -302,10 +305,10 @@ fun ComposableProfileMoreOptions(
                 }
             },
         contentAlignment = Alignment.Center
-    ){
+    ) {
         MaterialTheme(
             shapes = MaterialTheme.shapes.copy(extraSmall = RoundedCornerShape(16.dp)),
-        ){
+        ) {
             DropdownMenu(
                 modifier = Modifier
                     .background(dropDownBoxColor)
@@ -324,7 +327,13 @@ fun ComposableProfileMoreOptions(
                                 MedicoToast.showToast(context, "Clicked: $item")
                                 onDismiss()
                             }
-                            handleDropDownItemClick(context, index, onDismiss, navController, profileData)
+                            handleDropDownItemClick(
+                                context,
+                                index,
+                                onDismiss,
+                                navController,
+                                profileData
+                            )
                         }
                     )
                 }
@@ -340,9 +349,9 @@ private fun handleDropDownItemClick(
     onDismiss: () -> Unit,
     navController: NavController,
     profileData: Profile
-){
+) {
     onDismiss()
-    when(index){
+    when (index) {
         0 -> {
             // navigate to update profile screen
             navController.navigate(AppScreens.UpdateProfileScreen.route)
@@ -355,7 +364,8 @@ private fun handleDropDownItemClick(
 
         2 -> {
             val title = "Sharing profile..."
-            val textToShare = "Have a look at this profile of ${profileData.name} with ${profileData.yearsOfExp} of experience"
+            val textToShare =
+                "Have a look at this profile of ${profileData.name} with ${profileData.yearsOfExp} of experience"
             val shareIntent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_TEXT, textToShare)
@@ -374,7 +384,11 @@ private fun handleDropDownItemClick(
 
 
 @Composable
-fun ComposableProfileAbout(context: Context, profileViewModel: ProfileViewModel, profileInfo: (Profile) -> Unit) {
+fun ComposableProfileAbout(
+    context: Context,
+    profileViewModel: ProfileViewModel,
+    profileInfo: (Profile) -> Unit
+) {
     val painter = painterResource(id = R.drawable.doctor_profile)
     val color = MedicoUtils.getMedicoColor(context, R.color.bluish_gray)
 
@@ -389,7 +403,9 @@ fun ComposableProfileAbout(context: Context, profileViewModel: ProfileViewModel,
                 contentDescription = "Doctor profile"
             )
             IconButton(
-                modifier = Modifier.padding(2.dp).align(Alignment.BottomEnd),
+                modifier = Modifier
+                    .padding(2.dp)
+                    .align(Alignment.BottomEnd),
                 onClick = {
                     MedicoToast.showToast(context, "Adding new photo")
                 }) {
@@ -397,7 +413,7 @@ fun ComposableProfileAbout(context: Context, profileViewModel: ProfileViewModel,
             }
         }
 
-        ComposableProfileAboutInfo(context, profileViewModel){ profile ->
+        ComposableProfileAboutInfo(context, profileViewModel) { profile ->
             profileInfo(profile)
         }
     }
@@ -405,7 +421,11 @@ fun ComposableProfileAbout(context: Context, profileViewModel: ProfileViewModel,
 
 
 @Composable
-fun ComposableProfileAboutInfo(context: Context, profileViewModel: ProfileViewModel, profileResponse: (Profile) -> Unit) {
+fun ComposableProfileAboutInfo(
+    context: Context,
+    profileViewModel: ProfileViewModel,
+    profileResponse: (Profile) -> Unit
+) {
     var profileName by remember {
         mutableStateOf<String?>(null)
     }
@@ -437,7 +457,7 @@ fun ComposableProfileAboutInfo(context: Context, profileViewModel: ProfileViewMo
     val profileInfoResponse by profileViewModel.combinedProfileInfoData.collectAsStateWithLifecycle()
 
     LaunchedEffect(profileInfoResponse) {
-        with(profileInfoResponse){
+        with(profileInfoResponse) {
 //            if(isLoading!=null && isLoading==true){
 //                CustomToast.showToast(context, "Loading profile")
 //                return@LaunchedEffect
@@ -534,19 +554,19 @@ fun ComposableProfilePosts(context: Context, profileViewModel: ProfileViewModel)
     val lost = ConnectivityObserver.Status.Lost
     val unAvailable = ConnectivityObserver.Status.Unavailable
 
-    if((previousInternetStatus == lost || previousInternetStatus == unAvailable) && networkStatus == ConnectivityObserver.Status.Available){
+    if ((previousInternetStatus == lost || previousInternetStatus == unAvailable) && networkStatus == ConnectivityObserver.Status.Available) {
         // earlier connection was lost and now connection is re-established : reload screen
 //        CustomToast.showToast(context, "Reloading") // TODO : why is it showing when navigated from upd profile screen to profile screen
 //        MedicoUtils.ComposableNoNetworkFound(context, Modifier, profileViewModel, false)
     }
 
-    LaunchedEffect(networkStatus){
+    LaunchedEffect(networkStatus) {
         previousInternetStatus = networkStatus
         isInternetAvailable = networkStatus == ConnectivityObserver.Status.Available
     }
 
     LaunchedEffect(profilePostsResponse) {
-        with(profilePostsResponse){
+        with(profilePostsResponse) {
 //            if (isLoading!=null && isLoading == true) {
 //                CustomToast.showToast(context, "Loading your posts")
 //                return@LaunchedEffect
@@ -571,9 +591,11 @@ fun ComposableProfilePosts(context: Context, profileViewModel: ProfileViewModel)
 
     currentProfilePosts?.let {
         val painter = painterResource(id = R.drawable.celebrate_in_options)
-        LazyColumn(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 5.dp)) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp, horizontal = 5.dp)
+        ) {
             items(it) { posts ->
                 Card(
                     modifier = Modifier
@@ -582,7 +604,7 @@ fun ComposableProfilePosts(context: Context, profileViewModel: ProfileViewModel)
                     colors = CardDefaults.cardColors(Color.White),
                     elevation = CardDefaults.cardElevation(defaultElevation = 1.5.dp),
                     shape = RoundedCornerShape(6.dp)
-                ){
+                ) {
                     Column {
                         Text(
                             modifier = Modifier.padding(4.dp),
@@ -624,8 +646,8 @@ fun ComposableProfilePosts(context: Context, profileViewModel: ProfileViewModel)
         }
     }
 
-    if(isInternetAvailable){
-        if(currentProfilePosts.isNullOrEmpty()){
+    if (isInternetAvailable) {
+        if (currentProfilePosts.isNullOrEmpty()) {
             LaunchedEffect(Unit) {
                 scope.launch {
                     delay(10000L)

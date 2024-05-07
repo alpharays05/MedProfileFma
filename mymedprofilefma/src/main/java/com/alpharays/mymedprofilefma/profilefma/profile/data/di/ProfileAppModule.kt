@@ -1,7 +1,7 @@
 package com.alpharays.mymedprofilefma.profilefma.profile.data.di
 
-import android.content.Context
 import com.alpharays.alaskagemsdk.network.ResponseHandler
+import com.alpharays.mymedprofilefma.MedProfileFmaRouter.context
 import com.alpharays.mymedprofilefma.profilefma.profile.data.source.remote.ProfileApiServices
 import com.alpharays.mymedprofilefma.profilefma.profile.data.source.repo_impl.ProfileRepositoryImpl
 import com.alpharays.mymedprofilefma.profilefma.profile.data.source.room.MedicoDao
@@ -61,7 +61,6 @@ object ProfileAppModule {
     @Provides
     @Singleton
     fun provideMedicoDao(
-        context: Context,
     ): MedicoDao {
         return MedicoDatabase.getDatabase(context).medicoDao()
     }
@@ -71,9 +70,8 @@ object ProfileAppModule {
     fun provideHomeRepository(
         apiServices: ProfileApiServices,
         medicoDao: MedicoDao,
-        responseHandler: ResponseHandler,
     ): ProfileRepository {
-        return ProfileRepositoryImpl(apiServices, responseHandler, medicoDao)
+        return ProfileRepositoryImpl(apiServices, ResponseHandler(), medicoDao)
     }
 
 }
