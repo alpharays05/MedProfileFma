@@ -6,4 +6,5 @@ plugins {
 //    id("org.jetbrains.kotlin.plugin.serialization") version ("1.9.0") apply true
     kotlin("plugin.serialization") version "1.9.0" apply true
     id("com.google.dagger.hilt.android") version "2.48" apply false
+    id("com.google.devtools.ksp") version "1.9.0-1.0.12" apply false
 }
