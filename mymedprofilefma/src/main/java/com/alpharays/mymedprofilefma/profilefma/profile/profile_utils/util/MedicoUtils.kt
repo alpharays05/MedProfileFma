@@ -12,7 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,11 +27,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.alpharays.mymedprofilefma.profilefma.MainActivity // TODO: may be changed to ProfileActivity after package separation
-import com.alpharays.mymedprofilefma.profilefma.MedicoApp
-import com.alpharays.mymedprofilefma.profilefma.R
-import com.alpharays.mymedprofilefma.profilefma.presentation.home_screen.HomeViewModel
-import com.alpharays.mymedprofilefma.profilefma.profile.presentation.profile_screen.ProfileViewModel
+import com.alpharays.mymedprofilefma.MedProfileFmaRouter
+import com.alpharays.mymedprofilefma.R
+import com.alpharays.mymedprofilefma.dummywork.DummyActivity
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.connectivity.ConnectivityObserver
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.connectivity.NetworkConnectivityObserver
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.AUTH_TOKEN_KEY
@@ -41,21 +38,11 @@ import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.Profi
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.BALLOON_STATUS_COUNT_KEY
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.MEDICO_DOC_ID
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.MEDICO_DOC_ID_KEY
-import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.NO_CONNECTION
-import com.alpharays.mymedicommfma.communityv2.community_app.community_utils.CommunityUtils
-import com.alpharays.mymedicommfma.communityv2.community_app.presentation.community_screen.CommunityViewModel
-import com.skydoves.balloon.ArrowOrientation
-import com.skydoves.balloon.ArrowPositionRules
-import com.skydoves.balloon.Balloon.Builder
-import com.skydoves.balloon.BalloonAnimation
-import com.skydoves.balloon.BalloonHighlightAnimation
-import com.skydoves.balloon.BalloonSizeSpec
-import com.skydoves.balloon.compose.rememberBalloonBuilder
-import com.skydoves.balloon.overlay.BalloonOverlayRoundRect
+import com.alpharays.mymedprofilefma.profilefma.utils.ProfileUtils
 
 class MedicoUtils {
     companion object {
-        val context = MedicoApp.getInstance()
+        val context = MedProfileFmaRouter.context
         fun setAuthToken(token: String) {
             val authTokenSharedPref = context.getSharedPreferences(AUTH_TOKEN_SHARED_PREF, MODE_PRIVATE)
             authTokenSharedPref.edit().putString(AUTH_TOKEN_KEY, token).apply()
@@ -68,9 +55,9 @@ class MedicoUtils {
 
         fun signOut(){
             setAuthToken("")
-            CommunityUtils.setAuthToken(context,"")
+            ProfileUtils.setAuthToken(context,"")
             MedicoToast.showToast(context, "Signing out...")
-            val intent = Intent(context, MainActivity::class.java)
+            val intent = Intent(context, DummyActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             context.startActivity(intent)
         }
@@ -177,62 +164,7 @@ class MedicoUtils {
                 }
             }
 
-            if(reLoadScreen){
-                if(isInternetAvailable(context) == ConnectivityObserver.Status.Unavailable){
-                    MedicoToast.showToast(context, NO_CONNECTION)
-                    reLoadScreen = false
-                    return
-                }
-                ScreenReload(viewModel)
-            }
         }
 
-        @Composable
-        fun <T> ScreenReload(viewModel: T) {
-            LaunchedEffect(Unit){
-                when(viewModel){
-                    is HomeViewModel -> {
-                        viewModel.retryGettingRemoteAppointments()
-                    }
-
-                    is ProfileViewModel -> {
-                        viewModel.retryGettingProfileData()
-                    }
-
-                    is CommunityViewModel -> {
-                  //      viewModel.retryGettingPosts()  check_kr_lena
-                    }
-                }
-            }
-        }
-
-        @Composable
-        fun balloon(): Builder {
-            val builder = rememberBalloonBuilder {
-                setArrowSize(10)
-                setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
-                setArrowPosition(0.75f)
-                setArrowOrientation(ArrowOrientation.TOP)
-                setWidth(BalloonSizeSpec.WRAP)
-                setHeight(BalloonSizeSpec.WRAP)
-                setPadding(9)
-                setCornerRadius(8f)
-                setBackgroundColorResource(R.color.bluish_gray)
-                setAutoDismissDuration(4000L)
-                setBalloonAnimation(BalloonAnimation.ELASTIC)
-                setIsVisibleOverlay(true)
-                setOverlayColorResource(R.color.transparent)
-                setOverlayPaddingResource(R.dimen.overlayPaddingResource)
-                setBalloonHighlightAnimation(BalloonHighlightAnimation.BREATH)
-                setOverlayShape(
-                    BalloonOverlayRoundRect(
-                        R.dimen.balloonOverlayRadius,
-                        R.dimen.balloonOverlayRadius
-                    )
-                )
-                setDismissWhenClicked(true)
-            }
-            return builder
-        }
     }
 }
