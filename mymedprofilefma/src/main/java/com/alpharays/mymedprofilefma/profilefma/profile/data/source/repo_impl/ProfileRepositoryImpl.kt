@@ -3,40 +3,62 @@ package com.alpharays.mymedprofilefma.profilefma.profile.data.source.repo_impl
 import com.alpharays.alaskagemsdk.network.ResponseHandler
 import com.alpharays.alaskagemsdk.network.ResponseResult
 import com.alpharays.mymedprofilefma.profilefma.profile.data.source.remote.ProfileApiServices
-import com.alpharays.mymedprofilefma.profilefma.profile.data.source.room.MedicoDao
-import com.alpharays.mymedprofilefma.profilefma.profile.data.source.room.MedicoPatientProfileTable
-import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.profilescreen.Profile
-import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.profilescreen.userposts.UserCommunityPostsParent
+import com.alpharays.mymedprofilefma.profilefma.profile.domain.mapper.toProfileResponseMapper
+import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.ProfileData
+import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.ProfileResponse
 import com.alpharays.mymedprofilefma.profilefma.profile.domain.repository.ProfileRepository
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.SOMETHING_WENT_WRONG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
     private val profileApiServices: ProfileApiServices,
-    private val responseHandler: ResponseHandler,
-    private val medicoDao: MedicoDao,
+    private val responseHandler: ResponseHandler
 ) : ProfileRepository {
-    override suspend fun getProfileInfo(token: String): ResponseResult<Profile> =
-        withContext(Dispatchers.IO) {
-            return@withContext try {
+    override suspend fun fetchCurrentUserProfileData(token: String): ResponseResult<ProfileResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
                 responseHandler.callAPI {
                     withContext(Dispatchers.IO) {
-                        profileApiServices.getProfileInfo(token)
+                        val response = profileApiServices
+                            .fetchCurrentUserProfileData(token)
+                            .body()?.toProfileResponseMapper()
+                        println("current_profile_response :1: ${response?.profileData}")
+                        println("current_profile_response :2: ${response?.profilePosts}")
+                        Response.success(response)
                     }
                 }
             } catch (e: Exception) {
                 ResponseResult.Error(SOMETHING_WENT_WRONG)
             }
         }
+    }
+
+    override suspend fun fetchOtherUserProfileData(token: String, docId: String?): ResponseResult<ProfileResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                responseHandler.callAPI {
+                    withContext(Dispatchers.IO) {
+                        val response = profileApiServices
+                            .fetchOtherUserProfileData(token, docId)
+                            .body()?.toProfileResponseMapper()
+                        Response.success(response)
+                    }
+                }
+            } catch (e: Exception) {
+                ResponseResult.Error(SOMETHING_WENT_WRONG)
+            }
+        }
+    }
 
     override suspend fun updateProfileInfo(
-        profileInfo: Profile,
+        profileInfo: ProfileData,
         token: String,
-    ): ResponseResult<Profile> =
-        withContext(Dispatchers.IO) {
-            return@withContext try {
+    ): ResponseResult<ProfileData> {
+        return withContext(Dispatchers.IO) {
+            try {
                 responseHandler.callAPI {
                     withContext(Dispatchers.IO) {
                         profileApiServices.updateProfileInfo(profileInfo, token)
@@ -45,33 +67,6 @@ class ProfileRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 ResponseResult.Error(SOMETHING_WENT_WRONG)
             }
-        }
-
-    override suspend fun getMyCommunityPosts(docId: String): ResponseResult<UserCommunityPostsParent> =
-        withContext(Dispatchers.IO) {
-            return@withContext try {
-                responseHandler.callAPI {
-                    withContext(Dispatchers.IO) {
-                        profileApiServices.getMyAllPosts(docId)
-                    }
-                }
-            } catch (e: Exception) {
-                ResponseResult.Error(SOMETHING_WENT_WRONG)
-            }
-        }
-
-    override suspend fun setCachedProfile(profile: MedicoPatientProfileTable) {
-        withContext(Dispatchers.IO) {
-            medicoDao.setPatientProfile(profile)
-        }
-    }
-
-    override suspend fun getCachedProfile(): MedicoPatientProfileTable? {
-        return try {
-            medicoDao.getPatientProfile()
-        } catch (e: Exception) {
-            println(e.printStackTrace())
-            null
         }
     }
 }

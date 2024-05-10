@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("maven-publish")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
     kotlin("kapt")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
@@ -85,6 +86,9 @@ dependencies {
 
     // Icons Extended
     implementation("androidx.compose.material:material-icons-extended:1.6.3")
+
+    //medicomm app
+    implementation("com.github.alpharays05:MedComm:0.0.1-new-comm-release")
 
     // tool tip
     implementation("com.github.skydoves:balloon-compose:1.5.2")

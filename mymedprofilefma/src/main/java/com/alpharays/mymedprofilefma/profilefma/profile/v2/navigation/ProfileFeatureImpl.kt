@@ -6,8 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.alpharays.mymedprofilefma.profilefma.profile.presentation.navigation.AppScreens
-import com.alpharays.mymedprofilefma.profilefma.profile.presentation.profile_screen.ProfileScreen
 import com.alpharays.mymedprofilefma.profilefma.profile.presentation.profile_screen.UpdateProfileScreen
+import com.alpharays.mymedprofilefma.profilefma.profile.presentation.profile_screen.profile_ui_elements.MedicoProfile
+import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.DOC_ID_KEYWORD
 import com.alpharays.mymedprofilefma.profilefma.profile.v2.modules.profile.ProfileFeatureApi
 
 private const val baseRoute = "profile"
@@ -21,10 +22,9 @@ class ProfileFeatureImpl() : ProfileFeatureApi {
         navController: NavHostController,
         modifier: Modifier
     ) {
-        navGraphBuilder.composable(baseRoute) {
-            ProfileScreen(
-                navController
-            )
+        navGraphBuilder.composable(baseRoute.plus("/{$DOC_ID_KEYWORD}")) {
+            MedicoProfile(navController = navController)
+//            ProfileScreen(navController)
         }
 
         //nested

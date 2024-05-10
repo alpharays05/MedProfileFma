@@ -1,14 +1,11 @@
 package com.alpharays.mymedprofilefma.profilefma.profile.domain.repository
 
 import com.alpharays.alaskagemsdk.network.ResponseResult
-import com.alpharays.mymedprofilefma.profilefma.profile.data.source.room.MedicoPatientProfileTable
-import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.profilescreen.Profile
-import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.profilescreen.userposts.UserCommunityPostsParent
+import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.ProfileData
+import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.ProfileResponse
 
 interface ProfileRepository {
-    suspend fun getProfileInfo(token: String): ResponseResult<Profile>
-    suspend fun updateProfileInfo(profileInfo: Profile, token: String): ResponseResult<Profile>
-    suspend fun getMyCommunityPosts(docId: String): ResponseResult<UserCommunityPostsParent>
-    suspend fun setCachedProfile(profile: MedicoPatientProfileTable)
-    suspend fun getCachedProfile(): MedicoPatientProfileTable?
+    suspend fun fetchOtherUserProfileData(token: String, docId: String?): ResponseResult<ProfileResponse>
+    suspend fun fetchCurrentUserProfileData(token: String): ResponseResult<ProfileResponse>
+    suspend fun updateProfileInfo(profileInfo: ProfileData, token: String): ResponseResult<ProfileData>
 }

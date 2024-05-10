@@ -1,12 +1,11 @@
 package com.alpharays.mymedprofilefma.profilefma.profile.data.di
 
+import android.content.Context
 import com.alpharays.alaskagemsdk.network.ResponseHandler
-import com.alpharays.mymedprofilefma.MedProfileFmaRouter.context
 import com.alpharays.mymedprofilefma.profilefma.profile.data.source.remote.ProfileApiServices
 import com.alpharays.mymedprofilefma.profilefma.profile.data.source.repo_impl.ProfileRepositoryImpl
-import com.alpharays.mymedprofilefma.profilefma.profile.data.source.room.MedicoDao
-import com.alpharays.mymedprofilefma.profilefma.profile.data.source.room.MedicoDatabase
 import com.alpharays.mymedprofilefma.profilefma.profile.domain.repository.ProfileRepository
+import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.connectivity.NetworkConnectivityObserver
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.API_SAFE_KEY
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.API_SAFE_KEY_VALUE
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.BASE_URL
@@ -14,6 +13,7 @@ import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -57,21 +57,18 @@ object ProfileAppModule {
             .create(ProfileApiServices::class.java)
     }
 
-
     @Provides
     @Singleton
-    fun provideMedicoDao(
-    ): MedicoDao {
-        return MedicoDatabase.getDatabase(context).medicoDao()
+    fun provideHomeRepository(
+        apiServices: ProfileApiServices
+    ): ProfileRepository {
+        return ProfileRepositoryImpl(apiServices, ResponseHandler())
     }
 
     @Provides
     @Singleton
-    fun provideHomeRepository(
-        apiServices: ProfileApiServices,
-        medicoDao: MedicoDao,
-    ): ProfileRepository {
-        return ProfileRepositoryImpl(apiServices, ResponseHandler(), medicoDao)
+    fun provideNetworkConnectivityObserver(@ApplicationContext context: Context): NetworkConnectivityObserver {
+        return NetworkConnectivityObserver(context)
     }
 
 }

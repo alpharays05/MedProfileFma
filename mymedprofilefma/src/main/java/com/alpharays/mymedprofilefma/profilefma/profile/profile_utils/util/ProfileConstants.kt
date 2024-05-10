@@ -62,8 +62,11 @@ object ProfileConstants {
     // profile screen
     const val GET_PROFILE = "/doc/getprofile"
     const val UPDATE_PROFILE = "doc/Updateprofile"
-    const val CURR_DOCS_POSTS = "doc/allposts"   // for currently logged in user - to access one's profile and posts
-    const val OTHER_DOC_POSTS = "doc/currentdocposts"  // : for user's profile who is not the current logged in user - to see other's profile and posts
+    const val CURR_DOCS_POSTS = "doc/allposts"   // for currently logged in user - to access one's profile and userPosts
+    const val OTHER_DOC_POSTS = "doc/currentdocposts"  // : for user's profile who is not the current logged in user - to see other's profile and userPosts
+
+    const val GET_CURRENT_PROFILE_DATA = "/doc/myprofile"
+    const val GET_DOC_PROFILE_DATA = "/doc/myprofile" // TODO: in progress
 
     // room db tables
     const val MEDICO_APPOINTMENTS_TABLE = "medico_appointments_table"

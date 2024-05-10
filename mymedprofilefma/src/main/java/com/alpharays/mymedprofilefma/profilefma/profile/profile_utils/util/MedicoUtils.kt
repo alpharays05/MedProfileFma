@@ -62,16 +62,16 @@ class MedicoUtils {
             context.startActivity(intent)
         }
 
-        fun setDocId(docId: String) {
-            val docIdSharedPref = context.getSharedPreferences(MEDICO_DOC_ID, MODE_PRIVATE)
-            docIdSharedPref.edit().putString(MEDICO_DOC_ID_KEY, docId).apply()
-        }
-
-        fun getDocId(): String {
-            val docId = "652777d825ffc25072a940b7"
-            val docIdSharedPref = context.getSharedPreferences(MEDICO_DOC_ID, MODE_PRIVATE)
-            return docIdSharedPref.getString(MEDICO_DOC_ID_KEY, docId).toString()
-        }
+//        fun setDocId(docId: String) {
+//            val docIdSharedPref = context.getSharedPreferences(MEDICO_DOC_ID, MODE_PRIVATE)
+//            docIdSharedPref.edit().putString(MEDICO_DOC_ID_KEY, docId).apply()
+//        }
+//
+//        fun getDocId(): String {
+//            val docId = "652777d825ffc25072a940b7"
+//            val docIdSharedPref = context.getSharedPreferences(MEDICO_DOC_ID, MODE_PRIVATE)
+//            return docIdSharedPref.getString(MEDICO_DOC_ID_KEY, docId).toString()
+//        }
 
         fun updateBalloonCount(){
             val balloonStatusSharedPref = context.getSharedPreferences(BALLOON_STATUS_COUNT, MODE_PRIVATE)

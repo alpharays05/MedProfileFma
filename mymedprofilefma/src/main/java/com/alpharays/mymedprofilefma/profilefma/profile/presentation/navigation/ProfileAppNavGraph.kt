@@ -7,6 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.alpharays.alaskagemsdk.core.register
+import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.DOC_ID_KEYWORD
 import com.alpharays.mymedprofilefma.profilefma.profile.v2.di.DependencyProviderProfile
 
 
@@ -18,7 +19,7 @@ fun AppNavGraph(
     val context = LocalContext.current
     NavHost(
         navController = navController,
-        startDestination = DependencyProviderProfile.profileFeature().profileRoute
+        startDestination = DependencyProviderProfile.profileFeature().profileRoute.plus("/${DOC_ID_KEYWORD}")
     ) {
         register(
             DependencyProviderProfile.profileFeature(),
@@ -26,6 +27,5 @@ fun AppNavGraph(
             modifier = modifier
         )
     }
-
 }
 

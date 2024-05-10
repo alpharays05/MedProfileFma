@@ -1,77 +1,47 @@
 package com.alpharays.mymedprofilefma.profilefma.profile.domain.usecase
 
 import com.alpharays.alaskagemsdk.network.ResponseResult
-import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.profilescreen.Profile
+import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.ProfileData
+import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.ProfileResponse
 import com.alpharays.mymedprofilefma.profilefma.profile.domain.repository.ProfileRepository
 import com.alpharays.mymedprofilefma.profilefma.profile.profile_utils.util.ProfileConstants.SOMETHING_WENT_WRONG
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
-import com.alpharays.mymedprofilefma.profilefma.profile.data.source.room.MedicoPatientProfileTable as PatientTable
-import com.alpharays.mymedprofilefma.profilefma.profile.domain.model.profilescreen.userposts.UserCommunityPostsParent as PostsResponse
 
-class ProfileScreenUseCase @Inject constructor(
+class ProfileUseCase @Inject constructor(
     private val profileRepository: ProfileRepository,
 ) {
-    fun getProfile(token: String): Flow<ResponseResult<Profile>> = flow {
+    // getCurrentProfile
+    operator fun invoke(token: String): Flow<ResponseResult<ProfileResponse>> = flow {
         emit(ResponseResult.Loading())
-        val response = try {
-            val profileInfo = profileRepository.getProfileInfo(token)
-            profileInfo
-        } catch (e: Exception) {
-            ResponseResult.Error(SOMETHING_WENT_WRONG)
-        }
-        emit(response)
-    }
-
-    fun updateProfile(profileInfo: Profile, token: String): Flow<ResponseResult<Profile>> = flow {
-        val response = try {
-            val updatedProfileInfo = profileRepository.updateProfileInfo(profileInfo, token)
-            updatedProfileInfo
-        } catch (e: Exception) {
-            ResponseResult.Error(SOMETHING_WENT_WRONG)
-        }
-        emit(response)
-    }
-
-    fun getMyPosts(docId: String): Flow<ResponseResult<PostsResponse>> = flow {
-        emit(ResponseResult.Loading())
-        val response = try {
-            val myPosts = profileRepository.getMyCommunityPosts(docId)
-            myPosts
-        } catch (e: Exception) {
-            ResponseResult.Error(SOMETHING_WENT_WRONG)
-        }
-        emit(response)
-    }
-
-
-    // cached data
-    fun setCachedProfile(patientTable: PatientTable): Flow<Any> = flow {
         try {
-            profileRepository.setCachedProfile(patientTable)
+            val myProfileInfo = profileRepository.fetchCurrentUserProfileData(token)
+            emit(myProfileInfo)
         } catch (e: Exception) {
-            println(e.printStackTrace())
+            emit(ResponseResult.Error(SOMETHING_WENT_WRONG))
         }
     }
 
-    fun getCachedProfile(): Flow<ProfileCachedData> = flow {
-        val response = try {
-            val response = ProfileCachedData(data = profileRepository.getCachedProfile())
-            response
+    // getDocProfile
+    operator fun invoke(token: String, docId: String?): Flow<ResponseResult<ProfileResponse>> = flow {
+        emit(ResponseResult.Loading())
+        try {
+            val docProfileInfo = profileRepository.fetchOtherUserProfileData(token, docId)
+            emit(docProfileInfo)
         } catch (e: Exception) {
-            val response = ProfileCachedData(error = e.message)
-            response
+            emit(ResponseResult.Error(SOMETHING_WENT_WRONG))
         }
-        emit(response)
     }
 
-    suspend fun getCurrentCachedProfile(): PatientTable? {
-        return profileRepository.getCachedProfile()
+    // updateProfile
+    operator fun invoke(profileInfo: ProfileData, token: String): Flow<ResponseResult<ProfileData>> = flow {
+        emit(ResponseResult.Loading())
+        try {
+            val updatedProfileInfo = profileRepository.updateProfileInfo(profileInfo, token)
+            emit(updatedProfileInfo)
+        } catch (e: Exception) {
+            emit(ResponseResult.Error(SOMETHING_WENT_WRONG))
+        }
     }
 }
-
-data class ProfileCachedData(
-    val data: PatientTable? = null,
-    val error: String? = null,
-)

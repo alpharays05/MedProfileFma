@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
 }
@@ -61,6 +62,9 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     implementation(project(mapOf("path" to ":mymedprofilefma")))
+
+    //medicomm app
+    implementation("com.github.alpharays05:MedComm:0.0.1-new-comm-release")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
