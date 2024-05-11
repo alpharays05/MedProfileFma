@@ -27,6 +27,7 @@
     <color name="primary_theme_schedule_color">@color/schedule_light</color>
     <color name="primary_theme_schedule_color_2">@color/schedule_dark</color>
 
+    <color name="primary_200">#A8CEFC</color>
 
     <!--    <color name="primary_theme_schedule_color_2">@color/schedule_dark</color>-->
 

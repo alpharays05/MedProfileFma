@@ -63,6 +63,11 @@ val WicketRed = Color(0xFFD8031C)
 val ScoreGold = Color(0xFFFBD38B)
 val FinishGreen = Color(0xFF00A300)
 
+val SelectedTabColor = Color(0xFFA8D1FF)
+val UnSelectedTabColor = Color(0xFFFFB49C)
+val SelectedTabContentColor = Color(0xFF000000)
+val UnSelectedTabContentColor = Color(0xFF000000)
+
 val Primary100 = Color(0xFFC5DFFD)
 val Primary200 = Color(0xFFA8CEFC)
 val Primary300 = Color(0xFF8bbefb)

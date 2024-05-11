@@ -7,13 +7,13 @@
         <activity
             android:name=".dummywork.DummyActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light"
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".profilefma.profile.ProfileActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light"
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
     </application>

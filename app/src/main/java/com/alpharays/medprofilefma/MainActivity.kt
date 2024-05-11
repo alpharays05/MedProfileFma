@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import com.alpharays.medprofilefma.ui.theme.MedProfileFmaTheme
+import com.alpharays.mymedprofilefma.profilefma.profile.presentation.theme.MedProfileFmaTheme
 import com.alpharays.mymedprofilefma.MedProfileFmaRouter
 import com.alpharays.mymedprofilefma.profilefma.utils.ProfileUtils
 

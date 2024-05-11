@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.alpharays.mymedprofilefma.profilefma.profile.presentation.theme.Primary200
 import com.alpharays.mymedprofilefma.profilefma.profile.presentation.theme.Primary300
 import com.alpharays.mymedprofilefma.profilefma.profile.presentation.theme.Primary600
 import com.alpharays.mymedprofilefma.profilefma.profile.presentation.theme.spacing
@@ -32,8 +33,8 @@ fun ProfileHeader(navController: NavController) {
             bottomEnd = MaterialTheme.spacing.large
         ),
         colors = CardDefaults.cardColors(
-            containerColor = Primary300
-//            containerColor = Primary200
+//            containerColor = Primary300
+            containerColor = Primary200
         )
     ) {
         Box(

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -28,7 +27,7 @@ import com.alpharays.mymedprofilefma.profilefma.profile.presentation.theme.spaci
 @Composable
 fun MedicoProfile(navController: NavController) {
     val isTopBarPresent by remember { mutableStateOf(false) }
-    val cardHeight = LocalConfiguration.current.screenHeightDp * 0.1f
+    val cardHeight = LocalConfiguration.current.screenHeightDp * 0.07f
     val data = ProfileData(
         name = "Shivang Gautam",
         about = "Had been in AIMS for last 10 years",
@@ -48,7 +47,10 @@ fun MedicoProfile(navController: NavController) {
             }
         ) { innerPadding ->
             Column {
-                Box {
+                Box(
+                    modifier = Modifier
+                        .padding(bottom = MaterialTheme.spacing.medium)
+                ) {
                     ProfileHeader(navController)
                     Column(
                         modifier = Modifier
@@ -63,7 +65,7 @@ fun MedicoProfile(navController: NavController) {
                         ProfileUserCard(profileData = data)
                     }
                 }
-                ProfileActivity()
+                ProfileActivities()
             }
         }
     }

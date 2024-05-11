@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import com.alpharays.mymedprofilefma.profilefma.profile.presentation.AppContent
+import com.alpharays.mymedprofilefma.profilefma.profile.presentation.theme.MedProfileFmaTheme
 import com.alpharays.mymedprofilefma.profilefma.profile.v2.di.DependencyProviderProfile
 import com.alpharays.mymedprofilefma.profilefma.profile.v2.navigation.ProfileFeatureImpl
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +20,7 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         DependencyProviderProfile.provideImpl(profileFeatureApi = ProfileFeatureImpl())
         setContent {
-            MaterialTheme {
+            MedProfileFmaTheme {
                 WindowCompat.setDecorFitsSystemWindows(window, true)
                 Surface(
                     modifier = Modifier.fillMaxSize(),
